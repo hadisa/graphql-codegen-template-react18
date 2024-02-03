@@ -1,0 +1,2388 @@
+"""
+Remove user account.
+
+Requires one of the following permissions: AUTHENTICATED_USER.
+"""
+type AccountDelete {
+  errors: [AccountError!]!
+  user: User
+}
+
+type AccountError {
+  """A type of address that causes the error."""
+  addressType: AddressTypeEnum
+
+  """The error code."""
+  code: AccountErrorCode!
+
+  """
+  Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field.
+  """
+  field: String
+
+  """The error message."""
+  message: String
+}
+
+enum AccountErrorCode {
+  ACCOUNT_NOT_CONFIRMED
+  ACTIVATE_OWN_ACCOUNT
+  ACTIVATE_SUPERUSER_ACCOUNT
+  CHANNEL_INACTIVE
+  DEACTIVATE_OWN_ACCOUNT
+  DEACTIVATE_SUPERUSER_ACCOUNT
+  DELETE_NON_STAFF_USER
+  DELETE_OWN_ACCOUNT
+  DELETE_STAFF_ACCOUNT
+  DELETE_SUPERUSER_ACCOUNT
+  DUPLICATED_INPUT_ITEM
+  GRAPHQL_ERROR
+  INACTIVE
+  INVALID
+  INVALID_CREDENTIALS
+  INVALID_PASSWORD
+  JWT_DECODE_ERROR
+  JWT_INVALID_CSRF_TOKEN
+  JWT_INVALID_TOKEN
+  JWT_MISSING_TOKEN
+  JWT_SIGNATURE_EXPIRED
+  LEFT_NOT_MANAGEABLE_PERMISSION
+  MISSING_CHANNEL_SLUG
+  NOT_FOUND
+  OUT_OF_SCOPE_GROUP
+  OUT_OF_SCOPE_PERMISSION
+  OUT_OF_SCOPE_USER
+  PASSWORD_ENTIRELY_NUMERIC
+  PASSWORD_TOO_COMMON
+  PASSWORD_TOO_SHORT
+  PASSWORD_TOO_SIMILAR
+  REQUIRED
+  UNIQUE
+}
+
+input AccountInput {
+  avatar: String
+
+  """Billing address of the customer."""
+  defaultBillingAddress: AddressInput
+
+  """Shipping address of the customer."""
+  defaultShippingAddress: AddressInput
+
+  """Given name."""
+  firstName: String
+
+  """User language code."""
+  languageCode: LanguageCodeEnum
+
+  """Family name."""
+  lastName: String
+  phone: String
+  whatsapp: String
+}
+
+"""Register a new user."""
+type AccountRegister {
+  errors: [AccountError!]!
+
+  """Informs whether users need to confirm their email address."""
+  requiresConfirmation: Boolean
+  user: User
+}
+
+input AccountRegisterInput {
+  avatar: String
+
+  """
+  Slug of a channel which will be used to notify users. Optional when only one channel exists.
+  """
+  channel: String
+
+  """The email address of the user."""
+  email: String!
+
+  """Given name."""
+  firstName: String
+
+  """the unique identities.id form kratos user"""
+  identityId: ID!
+
+  """User language code."""
+  languageCode: LanguageCodeEnum
+
+  """Family name."""
+  lastName: String
+
+  """Password."""
+  password: String!
+  phone: String
+
+  """Base of frontend URL that will be needed to create confirmation URL."""
+  redirectUrl: String
+  whatsapp: String
+}
+
+type AccountRequestDeletion {
+  errors: [AccountError!]!
+  user: User
+}
+
+"""
+Updates the account of the logged-in user.
+
+Requires one of the following permissions: AUTHENTICATED_USER.
+"""
+type AccountUpdate {
+  accountErrors: [AccountError!]!
+  errors: [AccountError!]!
+  user: User
+}
+
+"""Represents user address data."""
+type Address implements Node {
+  city: String!
+  cityArea: String!
+  companyName: String!
+
+  """Shop's default country."""
+  country: CountryDisplay!
+  countryArea: String!
+  firstName: String!
+  id: ID!
+
+  """Address is user's default billing address."""
+  isDefaultBillingAddress: Boolean
+
+  """Address is user's default shipping address."""
+  isDefaultShippingAddress: Boolean
+  lastName: String!
+  phone: String
+  postalCode: String!
+  streetAddress1: String!
+  streetAddress2: String!
+}
+
+input AddressInput {
+  """City."""
+  city: String
+
+  """District."""
+  cityArea: String
+
+  """Company or organization."""
+  companyName: String
+
+  """Country."""
+  country: CountryCode
+
+  """State or province."""
+  countryArea: String
+
+  """Given name."""
+  firstName: String
+
+  """Family name."""
+  lastName: String
+
+  """Phone number."""
+  phone: String
+
+  """Postal code."""
+  postalCode: String
+
+  """Address."""
+  streetAddress1: String
+
+  """Address."""
+  streetAddress2: String
+}
+
+enum AddressTypeEnum {
+  BILLING
+  SHIPPING
+}
+
+type AssignedShift {
+  ShiftActivities: [AssignedShiftActivities]
+  break: String
+  channelId: ID
+  color: ShiftColorEnum
+  createdAt: Time
+  endTime: Time!
+  id: ID!
+  is24Hours: Boolean
+  isOpen: Boolean
+  isShared: Boolean
+  label: String
+  note: String
+  requestStatus: String
+  sharedBy: ID
+  sharedDate: Time
+  shiftGroupId: ID
+  shiftToOffer: AssignedShift
+  shiftToSwap: AssignedShift
+  startTime: Time!
+  toSwapWith: AssignedShift
+  type: String
+  userId: ID
+}
+
+type AssignedShiftActivities {
+  assignedShiftId: ID!
+  channelId: ID
+  code: String
+  color: String
+  createdAt: Time
+  endTime: Time!
+  id: ID!
+  isPaid: Boolean!
+  name: String
+  shiftGroupId: ID
+  startTime: Time!
+  userId: ID
+}
+
+input AssignedShiftActivitiesInput {
+  channelId: ID
+  code: String
+  color: ShiftColorEnum
+  endTime: Time
+  isPaid: Boolean
+  name: String
+  shiftGroupId: ID
+  startTime: Time
+  userId: ID
+}
+
+type AssignedShiftAddResponse {
+  assignedShift: AssignedShift
+  errors: [ShiftError!]!
+}
+
+type AssignedShiftDeleteResponse {
+  assignedShift: AssignedShift
+  errors: [ShiftError!]!
+}
+
+type AssignedShiftEditResponse {
+  assignedShift: AssignedShift
+  errors: [ShiftError!]!
+}
+
+input AssignedShiftInput {
+  AssignedShiftActivities: [AssignedShiftActivitiesInput]
+  break: UnpaidBreakEnum
+  channelId: ID
+  color: ShiftColorEnum
+  endTime: Time
+  is24Hours: Boolean
+  isOpen: Boolean
+  isShared: Boolean
+  label: String
+  note: String
+  sharedBy: ID
+  sharedDate: Time
+  shiftGroupId: ID
+  startTime: Time
+  userId: ID
+}
+
+type AssignedShiftMoveToOpenResponse {
+  errors: [ShiftError!]!
+  openShift: OpenShift
+}
+
+type AssignedShiftResult {
+  ShiftActivities: [AssignedShiftActivities]
+  break: String!
+  channelId: ID
+  color: String!
+  createdAt: Time
+  endTime: Time!
+  id: ID!
+  is24Hours: Boolean!
+  isOpen: Boolean
+  isShared: Boolean
+  label: String
+  note: String
+  shiftGroupId: ID
+  shiftToOffer: AssignedShiftResult
+  shiftToSwap: AssignedShiftResult
+  startTime: Time!
+  toSwapWith: AssignedShiftResult
+  type: String
+  userEmail: String
+  userId: ID
+  userLastName: String
+  userName: String
+}
+
+type AssignedShiftShareResponse {
+  assignedShift: AssignedShift
+  errors: [ShiftError!]!
+}
+
+input AssignedShiftsInput {
+  AssignedShiftActivities: [AssignedShiftActivitiesInput]
+  break: UnpaidBreakEnum
+  channelId: ID
+  color: ShiftColorEnum
+  endTime: Time
+  id: ID
+  is24Hours: Boolean
+  isOpen: Boolean
+  isShared: Boolean
+  label: String
+  note: String
+  sharedBy: ID
+  sharedDate: Time
+  shiftGroupId: ID
+  startTime: Time
+  userId: ID
+}
+
+type Channel {
+  availableShippingMethodsPerCountry: [ShippingMethodsPerCountry]
+  countries: [CountryDisplay]
+  currencyCode: String!
+  defaultCountry: String!
+  hasOrders: Boolean
+  id: ID!
+  isActive: Boolean!
+  name: String!
+  slug: String!
+  stockSettings: StockSettings
+  warehouses: [Warehouse]
+}
+
+input ChannelCreateInput {
+  availableShippingMethodsPerCountry: [ShippingMethodsPerCountryInput]
+  countries: [CountryDisplayInput]
+  currencyCode: String!
+  defaultCountry: CountryCode
+  hasOrders: Boolean
+  isActive: Boolean!
+  name: String!
+  slug: String!
+  stockSettings: StockSettingsInput
+  warehouses: [WarehouseInput]
+}
+
+input ChannelUpdateInput {
+  currencyCode: String!
+  defaultCountry: CountryCode!
+  isActive: Boolean!
+  name: String!
+  slug: String!
+}
+
+"""An enumeration."""
+enum CountryCode {
+  AD
+  AE
+  AF
+  AG
+  AI
+  AL
+  AM
+  AO
+  AQ
+  AR
+  AS
+  AT
+  AU
+  AW
+  AX
+  AZ
+  BA
+  BB
+  BD
+  BE
+  BF
+  BG
+  BH
+  BI
+  BJ
+  BL
+  BM
+  BN
+  BO
+  BQ
+  BR
+  BS
+  BT
+  BV
+  BW
+  BY
+  BZ
+  CA
+  CC
+  CD
+  CF
+  CG
+  CH
+  CI
+  CK
+  CL
+  CM
+  CN
+  CO
+  CR
+  CU
+  CV
+  CW
+  CX
+  CY
+  CZ
+  DE
+  DJ
+  DK
+  DM
+  DO
+  DZ
+  EC
+  EE
+  EG
+  EH
+  ER
+  ES
+  ET
+  EU
+  FI
+  FJ
+  FK
+  FM
+  FO
+  FR
+  GA
+  GB
+  GD
+  GE
+  GF
+  GG
+  GH
+  GI
+  GL
+  GM
+  GN
+  GP
+  GQ
+  GR
+  GS
+  GT
+  GU
+  GW
+  GY
+  HK
+  HM
+  HN
+  HR
+  HT
+  HU
+  ID
+  IE
+  IL
+  IM
+  IN
+  IO
+  IQ
+  IR
+  IS
+  IT
+  JE
+  JM
+  JO
+  JP
+  KE
+  KG
+  KH
+  KI
+  KM
+  KN
+  KP
+  KR
+  KW
+  KY
+  KZ
+  LA
+  LB
+  LC
+  LI
+  LK
+  LR
+  LS
+  LT
+  LU
+  LV
+  LY
+  MA
+  MC
+  MD
+  ME
+  MF
+  MG
+  MH
+  MK
+  ML
+  MM
+  MN
+  MO
+  MP
+  MQ
+  MR
+  MS
+  MT
+  MU
+  MV
+  MW
+  MX
+  MY
+  MZ
+  NA
+  NC
+  NE
+  NF
+  NG
+  NI
+  NL
+  NO
+  NP
+  NR
+  NU
+  NZ
+  OM
+  PA
+  PE
+  PF
+  PG
+  PH
+  PK
+  PL
+  PM
+  PN
+  PR
+  PS
+  PT
+  PW
+  PY
+  QA
+  RE
+  RO
+  RS
+  RU
+  RW
+  SA
+  SB
+  SC
+  SD
+  SE
+  SG
+  SH
+  SI
+  SJ
+  SK
+  SL
+  SM
+  SN
+  SO
+  SR
+  SS
+  ST
+  SV
+  SX
+  SY
+  SZ
+  TC
+  TD
+  TF
+  TG
+  TH
+  TJ
+  TK
+  TL
+  TM
+  TN
+  TO
+  TR
+  TT
+  TV
+  TW
+  TZ
+  UA
+  UG
+  UM
+  US
+  UY
+  UZ
+  VA
+  VC
+  VE
+  VG
+  VI
+  VN
+  VU
+  WF
+  WS
+  YE
+  YT
+  ZA
+  ZM
+  ZW
+}
+
+type CountryDisplay {
+  """Country code."""
+  code: String!
+
+  """Country name."""
+  country: String!
+}
+
+input CountryDisplayInput {
+  code: String!
+  country: String!
+}
+
+type CreateShiftGroupResponse {
+  errors: [ShiftError!]!
+  shiftGroup: ShiftGroup
+}
+
+type DayNoteCreateResponse {
+  errors: [ShiftError!]!
+  note: DayNotes
+}
+
+type DayNoteResponse {
+  channelId: String
+  createdAt: Time
+  date: Time!
+  id: ID!
+  note: String
+}
+
+type DayNoteUpdateResponse {
+  errors: [ShiftError!]!
+  note: DayNotes
+}
+
+type DayNotes {
+  channelId: String
+  createdAt: Time
+  date: Time!
+  id: ID!
+  note: String
+}
+
+input DayNotesInput {
+  channelId: String
+  date: Time!
+  note: String
+}
+
+type GetAllAssignedShiftByChannelIDResponse {
+  message: String
+  result: [ShiftGroups]
+  status: String
+}
+
+type GetAllRequestsCountableEdge {
+  node: RequestResponse!
+}
+
+type GetAllRequestsResponse {
+  edges: [GetAllRequestsCountableEdge!]!
+  totalCount: Int
+}
+
+type GetAllUniqueShiftsResponse {
+  message: String
+  result: UniqueShifts
+  status: String
+}
+
+type GetNonShiftGroupMembersResponse {
+  message: String
+  result: [User]!
+  status: String
+}
+
+type GetRequestsCountableEdge {
+  node: RequestResponse!
+}
+
+type GetRequestsResponse {
+  edges: [GetRequestsCountableEdge!]!
+  totalCount: Int
+}
+
+type GetShiftGroupMembersCountableEdge {
+  node: User!
+}
+
+type GetShiftsByTaskResponse {
+  message: String
+  result: [ShiftGroups]
+  status: String
+}
+
+input GetShiftsFilter {
+  includeOpenShifts: Boolean
+  includeRequests: Boolean
+  includeShifts: Boolean
+  shiftGroupIds: [ID!]
+  shiftGroupMemberIds: [ID!]
+}
+
+type GetShiftsResponse {
+  message: String
+  result: Shifts
+  status: String
+}
+
+enum LanguageCodeEnum {
+  AF
+  AF_NA
+  AF_ZA
+  AGQ
+  AGQ_CM
+  AK
+  AK_GH
+  AM
+  AM_ET
+  AR
+  AR_AE
+  AR_BH
+  AR_DJ
+  AR_DZ
+  AR_EG
+  AR_EH
+  AR_ER
+  AR_IL
+  AR_IQ
+  AR_JO
+  AR_KM
+  AR_KW
+  AR_LB
+  AR_LY
+  AR_MA
+  AR_MR
+  AR_OM
+  AR_PS
+  AR_QA
+  AR_SA
+  AR_SD
+  AR_SO
+  AR_SS
+  AR_SY
+  AR_TD
+  AR_TN
+  AR_YE
+  AS
+  ASA
+  ASA_TZ
+  AST
+  AST_ES
+  AS_IN
+  AZ
+  AZ_CYRL
+  AZ_CYRL_AZ
+  AZ_LATN
+  AZ_LATN_AZ
+  BAS
+  BAS_CM
+  BE
+  BEM
+  BEM_ZM
+  BEZ
+  BEZ_TZ
+  BE_BY
+  BG
+  BG_BG
+  BM
+  BM_ML
+  BN
+  BN_BD
+  BN_IN
+  BO
+  BO_CN
+  BO_IN
+  BR
+  BRX
+  BRX_IN
+  BR_FR
+  BS
+  BS_CYRL
+  BS_CYRL_BA
+  BS_LATN
+  BS_LATN_BA
+  CA
+  CA_AD
+  CA_ES
+  CA_ES_VALENCIA
+  CA_FR
+  CA_IT
+  CCP
+  CCP_BD
+  CCP_IN
+  CE
+  CEB
+  CEB_PH
+  CE_RU
+  CGG
+  CGG_UG
+  CHR
+  CHR_US
+  CKB
+  CKB_IQ
+  CKB_IR
+  CS
+  CS_CZ
+  CU
+  CU_RU
+  CY
+  CY_GB
+  DA
+  DAV
+  DAV_KE
+  DA_DK
+  DA_GL
+  DE
+  DE_AT
+  DE_BE
+  DE_CH
+  DE_DE
+  DE_IT
+  DE_LI
+  DE_LU
+  DJE
+  DJE_NE
+  DSB
+  DSB_DE
+  DUA
+  DUA_CM
+  DYO
+  DYO_SN
+  DZ
+  DZ_BT
+  EBU
+  EBU_KE
+  EE
+  EE_GH
+  EE_TG
+  EL
+  EL_CY
+  EL_GR
+  EN
+  EN_AE
+  EN_AG
+  EN_AI
+  EN_AS
+  EN_AT
+  EN_AU
+  EN_BB
+  EN_BE
+  EN_BI
+  EN_BM
+  EN_BS
+  EN_BW
+  EN_BZ
+  EN_CA
+  EN_CC
+  EN_CH
+  EN_CK
+  EN_CM
+  EN_CX
+  EN_CY
+  EN_DE
+  EN_DG
+  EN_DK
+  EN_DM
+  EN_ER
+  EN_FI
+  EN_FJ
+  EN_FK
+  EN_FM
+  EN_GB
+  EN_GD
+  EN_GG
+  EN_GH
+  EN_GI
+  EN_GM
+  EN_GU
+  EN_GY
+  EN_HK
+  EN_IE
+  EN_IL
+  EN_IM
+  EN_IN
+  EN_IO
+  EN_JE
+  EN_JM
+  EN_KE
+  EN_KI
+  EN_KN
+  EN_KY
+  EN_LC
+  EN_LR
+  EN_LS
+  EN_MG
+  EN_MH
+  EN_MO
+  EN_MP
+  EN_MS
+  EN_MT
+  EN_MU
+  EN_MW
+  EN_MY
+  EN_NA
+  EN_NF
+  EN_NG
+  EN_NL
+  EN_NR
+  EN_NU
+  EN_NZ
+  EN_PG
+  EN_PH
+  EN_PK
+  EN_PN
+  EN_PR
+  EN_PW
+  EN_RW
+  EN_SB
+  EN_SC
+  EN_SD
+  EN_SE
+  EN_SG
+  EN_SH
+  EN_SI
+  EN_SL
+  EN_SS
+  EN_SX
+  EN_SZ
+  EN_TC
+  EN_TK
+  EN_TO
+  EN_TT
+  EN_TV
+  EN_TZ
+  EN_UG
+  EN_UM
+  EN_US
+  EN_VC
+  EN_VG
+  EN_VI
+  EN_VU
+  EN_WS
+  EN_ZA
+  EN_ZM
+  EN_ZW
+  EO
+  ES
+  ES_AR
+  ES_BO
+  ES_BR
+  ES_BZ
+  ES_CL
+  ES_CO
+  ES_CR
+  ES_CU
+  ES_DO
+  ES_EA
+  ES_EC
+  ES_ES
+  ES_GQ
+  ES_GT
+  ES_HN
+  ES_IC
+  ES_MX
+  ES_NI
+  ES_PA
+  ES_PE
+  ES_PH
+  ES_PR
+  ES_PY
+  ES_SV
+  ES_US
+  ES_UY
+  ES_VE
+  ET
+  ET_EE
+  EU
+  EU_ES
+  EWO
+  EWO_CM
+  FA
+  FA_AF
+  FA_IR
+  FF
+  FF_ADLM
+  FF_ADLM_BF
+  FF_ADLM_CM
+  FF_ADLM_GH
+  FF_ADLM_GM
+  FF_ADLM_GN
+  FF_ADLM_GW
+  FF_ADLM_LR
+  FF_ADLM_MR
+  FF_ADLM_NE
+  FF_ADLM_NG
+  FF_ADLM_SL
+  FF_ADLM_SN
+  FF_LATN
+  FF_LATN_BF
+  FF_LATN_CM
+  FF_LATN_GH
+  FF_LATN_GM
+  FF_LATN_GN
+  FF_LATN_GW
+  FF_LATN_LR
+  FF_LATN_MR
+  FF_LATN_NE
+  FF_LATN_NG
+  FF_LATN_SL
+  FF_LATN_SN
+  FI
+  FIL
+  FIL_PH
+  FI_FI
+  FO
+  FO_DK
+  FO_FO
+  FR
+  FR_BE
+  FR_BF
+  FR_BI
+  FR_BJ
+  FR_BL
+  FR_CA
+  FR_CD
+  FR_CF
+  FR_CG
+  FR_CH
+  FR_CI
+  FR_CM
+  FR_DJ
+  FR_DZ
+  FR_FR
+  FR_GA
+  FR_GF
+  FR_GN
+  FR_GP
+  FR_GQ
+  FR_HT
+  FR_KM
+  FR_LU
+  FR_MA
+  FR_MC
+  FR_MF
+  FR_MG
+  FR_ML
+  FR_MQ
+  FR_MR
+  FR_MU
+  FR_NC
+  FR_NE
+  FR_PF
+  FR_PM
+  FR_RE
+  FR_RW
+  FR_SC
+  FR_SN
+  FR_SY
+  FR_TD
+  FR_TG
+  FR_TN
+  FR_VU
+  FR_WF
+  FR_YT
+  FUR
+  FUR_IT
+  FY
+  FY_NL
+  GA
+  GA_GB
+  GA_IE
+  GD
+  GD_GB
+  GL
+  GL_ES
+  GSW
+  GSW_CH
+  GSW_FR
+  GSW_LI
+  GU
+  GUZ
+  GUZ_KE
+  GU_IN
+  GV
+  GV_IM
+  HA
+  HAW
+  HAW_US
+  HA_GH
+  HA_NE
+  HA_NG
+  HE
+  HE_IL
+  HI
+  HI_IN
+  HR
+  HR_BA
+  HR_HR
+  HSB
+  HSB_DE
+  HU
+  HU_HU
+  HY
+  HY_AM
+  IA
+  ID
+  ID_ID
+  IG
+  IG_NG
+  II
+  II_CN
+  IS
+  IS_IS
+  IT
+  IT_CH
+  IT_IT
+  IT_SM
+  IT_VA
+  JA
+  JA_JP
+  JGO
+  JGO_CM
+  JMC
+  JMC_TZ
+  JV
+  JV_ID
+  KA
+  KAB
+  KAB_DZ
+  KAM
+  KAM_KE
+  KA_GE
+  KDE
+  KDE_TZ
+  KEA
+  KEA_CV
+  KHQ
+  KHQ_ML
+  KI
+  KI_KE
+  KK
+  KKJ
+  KKJ_CM
+  KK_KZ
+  KL
+  KLN
+  KLN_KE
+  KL_GL
+  KM
+  KM_KH
+  KN
+  KN_IN
+  KO
+  KOK
+  KOK_IN
+  KO_KP
+  KO_KR
+  KS
+  KSB
+  KSB_TZ
+  KSF
+  KSF_CM
+  KSH
+  KSH_DE
+  KS_ARAB
+  KS_ARAB_IN
+  KU
+  KU_TR
+  KW
+  KW_GB
+  KY
+  KY_KG
+  LAG
+  LAG_TZ
+  LB
+  LB_LU
+  LG
+  LG_UG
+  LKT
+  LKT_US
+  LN
+  LN_AO
+  LN_CD
+  LN_CF
+  LN_CG
+  LO
+  LO_LA
+  LRC
+  LRC_IQ
+  LRC_IR
+  LT
+  LT_LT
+  LU
+  LUO
+  LUO_KE
+  LUY
+  LUY_KE
+  LU_CD
+  LV
+  LV_LV
+  MAI
+  MAI_IN
+  MAS
+  MAS_KE
+  MAS_TZ
+  MER
+  MER_KE
+  MFE
+  MFE_MU
+  MG
+  MGH
+  MGH_MZ
+  MGO
+  MGO_CM
+  MG_MG
+  MI
+  MI_NZ
+  MK
+  MK_MK
+  ML
+  ML_IN
+  MN
+  MNI
+  MNI_BENG
+  MNI_BENG_IN
+  MN_MN
+  MR
+  MR_IN
+  MS
+  MS_BN
+  MS_ID
+  MS_MY
+  MS_SG
+  MT
+  MT_MT
+  MUA
+  MUA_CM
+  MY
+  MY_MM
+  MZN
+  MZN_IR
+  NAQ
+  NAQ_NA
+  NB
+  NB_NO
+  NB_SJ
+  ND
+  NDS
+  NDS_DE
+  NDS_NL
+  ND_ZW
+  NE
+  NE_IN
+  NE_NP
+  NL
+  NL_AW
+  NL_BE
+  NL_BQ
+  NL_CW
+  NL_NL
+  NL_SR
+  NL_SX
+  NMG
+  NMG_CM
+  NN
+  NNH
+  NNH_CM
+  NN_NO
+  NUS
+  NUS_SS
+  NYN
+  NYN_UG
+  OM
+  OM_ET
+  OM_KE
+  OR
+  OR_IN
+  OS
+  OS_GE
+  OS_RU
+  PA
+  PA_ARAB
+  PA_ARAB_PK
+  PA_GURU
+  PA_GURU_IN
+  PCM
+  PCM_NG
+  PL
+  PL_PL
+  PRG
+  PS
+  PS_AF
+  PS_PK
+  PT
+  PT_AO
+  PT_BR
+  PT_CH
+  PT_CV
+  PT_GQ
+  PT_GW
+  PT_LU
+  PT_MO
+  PT_MZ
+  PT_PT
+  PT_ST
+  PT_TL
+  QU
+  QU_BO
+  QU_EC
+  QU_PE
+  RM
+  RM_CH
+  RN
+  RN_BI
+  RO
+  ROF
+  ROF_TZ
+  RO_MD
+  RO_RO
+  RU
+  RU_BY
+  RU_KG
+  RU_KZ
+  RU_MD
+  RU_RU
+  RU_UA
+  RW
+  RWK
+  RWK_TZ
+  RW_RW
+  SAH
+  SAH_RU
+  SAQ
+  SAQ_KE
+  SAT
+  SAT_OLCK
+  SAT_OLCK_IN
+  SBP
+  SBP_TZ
+  SD
+  SD_ARAB
+  SD_ARAB_PK
+  SD_DEVA
+  SD_DEVA_IN
+  SE
+  SEH
+  SEH_MZ
+  SES
+  SES_ML
+  SE_FI
+  SE_NO
+  SE_SE
+  SG
+  SG_CF
+  SHI
+  SHI_LATN
+  SHI_LATN_MA
+  SHI_TFNG
+  SHI_TFNG_MA
+  SI
+  SI_LK
+  SK
+  SK_SK
+  SL
+  SL_SI
+  SMN
+  SMN_FI
+  SN
+  SN_ZW
+  SO
+  SO_DJ
+  SO_ET
+  SO_KE
+  SO_SO
+  SQ
+  SQ_AL
+  SQ_MK
+  SQ_XK
+  SR
+  SR_CYRL
+  SR_CYRL_BA
+  SR_CYRL_ME
+  SR_CYRL_RS
+  SR_CYRL_XK
+  SR_LATN
+  SR_LATN_BA
+  SR_LATN_ME
+  SR_LATN_RS
+  SR_LATN_XK
+  SU
+  SU_LATN
+  SU_LATN_ID
+  SV
+  SV_AX
+  SV_FI
+  SV_SE
+  SW
+  SW_CD
+  SW_KE
+  SW_TZ
+  SW_UG
+  TA
+  TA_IN
+  TA_LK
+  TA_MY
+  TA_SG
+  TE
+  TEO
+  TEO_KE
+  TEO_UG
+  TE_IN
+  TG
+  TG_TJ
+  TH
+  TH_TH
+  TI
+  TI_ER
+  TI_ET
+  TK
+  TK_TM
+  TO
+  TO_TO
+  TR
+  TR_CY
+  TR_TR
+  TT
+  TT_RU
+  TWQ
+  TWQ_NE
+  TZM
+  TZM_MA
+  UG
+  UG_CN
+  UK
+  UK_UA
+  UR
+  UR_IN
+  UR_PK
+  UZ
+  UZ_ARAB
+  UZ_ARAB_AF
+  UZ_CYRL
+  UZ_CYRL_UZ
+  UZ_LATN
+  UZ_LATN_UZ
+  VAI
+  VAI_LATN
+  VAI_LATN_LR
+  VAI_VAII
+  VAI_VAII_LR
+  VI
+  VI_VN
+  VO
+  VUN
+  VUN_TZ
+  WAE
+  WAE_CH
+  WO
+  WO_SN
+  XH
+  XH_ZA
+  XOG
+  XOG_UG
+  YAV
+  YAV_CM
+  YI
+  YO
+  YO_BJ
+  YO_NG
+  YUE
+  YUE_HANS
+  YUE_HANS_CN
+  YUE_HANT
+  YUE_HANT_HK
+  ZGH
+  ZGH_MA
+  ZH
+  ZH_HANS
+  ZH_HANS_CN
+  ZH_HANS_HK
+  ZH_HANS_MO
+  ZH_HANS_SG
+  ZH_HANT
+  ZH_HANT_HK
+  ZH_HANT_MO
+  ZH_HANT_TW
+  ZU
+  ZU_ZA
+}
+
+scalar Map
+
+"""
+Metadata is a map of key-value pairs, both keys and values are `String`.
+"""
+scalar Metadata
+
+type Mutation {
+  CopyAssignedShifts(authUserId: ID, copyDate: Time!, input: [AssignedShiftInput!]!, numOfCopies: Int): [AssignedShiftAddResponse!]!
+  CopyOpenShifts(authUserId: ID, copyDate: Time!, input: [OpenShiftInput!]!, numOfCopies: Int): [OpenShiftAddResponse!]!
+  CopyTimeOffs(authUserId: ID, copyDate: Time!, input: [TimeOffInput!]!, numOfCopies: Int!): [TimeOffAddResponse!]!
+  SharedOpenShift(authUserId: ID, input: [OpenShiftsInput!]!): OpenShiftEditResponse
+  SharedTimeOff(authUserId: ID, input: [TimeOffInput!]!): TimeOffEditResponse
+  UpdateSetting(authUserId: ID, id: ID!, input: SettingInput!): SettingEditResponse
+  accountDelete(id: ID!): AccountDelete
+  accountRegister(input: AccountRegisterInput!): AccountRegister
+  accountRequestDeletion(channel: String, redirectUrl: String!): AccountRequestDeletion
+  accountUpdate(id: ID!, input: AccountInput!): AccountUpdate
+  approveRequestOffer(authUserId: ID, id: ID!, responseNote: String): RequestOfferResponse
+  approveRequestSwap(authUserId: ID, id: ID!, responseNote: String): RequestSwapResponse!
+  approveRequestTimeOff(authUserId: ID, id: ID!, responseNote: String): TimeOffResponse
+  approveTimeCard(authUserId: ID, id: ID!, responseNote: String): TimeCardResponse!
+  assignedShiftMoveToOpen(authUserId: ID, channelID: ID, id: ID!, shiftGroupID: ID): AssignedShiftMoveToOpenResponse
+  assignedShiftShare(authUserId: ID, channelID: ID, id: ID!, shiftGroupID: ID): AssignedShiftShareResponse
+  cancelRequestOffer(authUserId: ID, channelId: ID!, requestId: ID!): RequestOfferResponse
+  cancelRequestSwap(authUserId: ID, channelId: ID!, requestId: ID!): RequestSwapResponse
+  cancelRequestTimeOff(authUserId: ID, channelId: ID!, requestId: ID!): TimeOffResponse
+  cancelTimeCard(authUserId: ID, channelId: ID!, timeCardId: ID!): TimeCardResponse
+  channelActivate(id: ID!): Channel
+  channelCreate(input: ChannelCreateInput!): Channel
+  channelDeactivate(id: ID!): Channel
+  channelDelete(id: ID!): Channel
+  channelUpdate(id: ID!, input: ChannelUpdateInput!): Channel
+  clockIn(authUserId: ID, input: TimeCardInput!): TimeCardResponse!
+  clockOut(authUserId: ID, id: ID!, input: TimeCardInput): TimeCardResponse!
+  createAssignedShift(authUserId: ID, input: AssignedShiftInput!): AssignedShiftAddResponse
+  createDayNotes(authUserId: ID, input: DayNotesInput): DayNoteCreateResponse
+  createOpenShift(authUserId: ID, input: OpenShiftInput!): OpenShiftAddResponse
+  createRequest(input: RequestsInput!): Request
+  createRequestOffer(authUserId: ID, input: RequestOfferInput!): RequestOfferResponse
+  createRequestSwap(authUserId: ID, input: RequestSwapInput!): RequestSwapResponse!
+  createRequestTimeOff(authUserId: ID, input: RequestTimeOffInput!): TimeOffResponse
+  createSetting(authUserId: ID, input: SettingInput!): SettingAddResponse
+  createShiftGroup(authUserId: ID, input: ShiftGroupInput!): CreateShiftGroupResponse
+  createTimeOff(authUserId: ID, input: TimeOffInput!): TimeOffAddResponse
+  createTimeSetup(authUserId: ID, input: TimeSetupInput): TimeSetupResponse!
+  deleteAssignedShift(authUserId: ID, id: ID!): AssignedShiftDeleteResponse
+  deleteDayNotes(authUserId: ID, id: ID!): String
+  deleteOpenShift(authUserId: ID, id: ID!): OpenShiftDeleteResponse
+  deleteRequest(id: ID!): ID!
+  deleteRequestOffer(authUserId: ID, id: ID!): RequestOfferResponse
+  deleteRequestSwap(authUserId: ID, id: ID!): RequestSwapResponse!
+  deleteRequestTimeOff(authUserId: ID, id: ID!): TimeOffResponse
+  deleteShiftGroup(authUserId: ID, id: ID!): CreateShiftGroupResponse
+  deleteTimeCard(authUserId: ID, id: ID!): TimeCardResponse!
+  deleteTimeOff(authUserId: ID, id: ID!): TimeOffDeleteResponse
+  deleteTimeOffs(authUserId: ID, channelId: ID!, shiftGroupId: ID!, userId: ID!): String!
+  denyRequestOffer(authUserId: ID, id: ID!, responseNote: String): RequestOfferResponse
+  denyRequestSwap(authUserId: ID, id: ID!, responseNote: String): RequestSwapResponse!
+  denyRequestTimeOff(authUserId: ID, id: ID!, responseNote: String): TimeOffResponse
+  denyTimeCard(authUserId: ID, id: ID!, responseNote: String): TimeCardResponse!
+  endBreak(authUserId: ID, input: TimeCardInput, timeCardID: ID!): TimeCardResponse
+  moveOpenShiftToNewDate(authUserId: ID, channelId: ID, endTime: Time!, id: ID!, shiftGroupId: ID, startTime: Time!): OpenShiftEditResponse
+  moveOpenShiftToUser(authUserId: ID, channelId: ID!, endTime: Time!, openShiftId: ID!, shiftGroupId: ID!, startTime: Time!, userId: ID!): OpenShiftAssignResponse
+  openShiftAssign(authUserId: ID, channelId: ID!, openShiftId: ID!, shiftGroupId: ID!, userId: ID!): OpenShiftAssignResponse
+  recallSharedAssignedShift(authUserId: ID, id: ID!): String!
+  recallSharedAssignedShiftByTime(authUserId: ID, channelID: ID, endTime: Time!, startTime: Time!): [AssignedShift!]!
+  recallSharedOpenShiftByTime(authUserId: ID, channelID: ID, endTime: Time!, startTime: Time!): [OpenShift!]!
+  renameShiftGroup(authUserId: ID, id: ID!, name: String!): CreateShiftGroupResponse
+  reorderShiftGroups(authUserId: ID, channelId: ID, shiftGroupIds: [ID!]!): ResponseStatus
+  sharedAssignedShift(authUserId: ID, input: [AssignedShiftsInput!]!): AssignedShiftEditResponse
+  shiftGroupMemberAdd(authUserId: ID, input: ShiftGroupMemberInput!): ShiftGroupMemberAddResponse
+  shiftGroupMemberRemove(authUserId: ID, channelId: ID!, shiftGroupId: ID!, userId: ID!): ShiftGroupMemberRemoveResponse
+  shiftGroupMembersReorder(authUserId: ID, channelId: ID, shiftGroupId: ID!, userIds: [ID!]!): ResponseStatus!
+  startBreak(authUserId: ID, input: TimeCardInput, timeCardID: ID!): TimeCardResponse
+  updateAssignedShift(authUserId: ID, id: ID!, input: AssignedShiftInput!): AssignedShiftEditResponse
+  updateDayNotes(authUserId: ID, id: ID!, input: DayNotesInput): DayNoteUpdateResponse
+  updateOpenShift(authUserId: ID, id: ID!, input: OpenShiftInput!): OpenShiftEditResponse
+  updateRequestOffer(authUserId: ID, id: ID!, input: RequestOfferInput!): RequestOfferResponse
+  updateRequestSwap(authUserId: ID, id: ID!, input: RequestSwapInput!): RequestSwapResponse!
+  updateRequestTimeOff(authUserId: ID, id: ID!, input: RequestTimeOffInput!): TimeOffResponse
+  updateTimeOff(authUserId: ID, id: ID!, input: TimeOffInput!): TimeOffEditResponse
+  updateTimeSetup(authUserId: ID, id: ID!, input: TimeSetupInput): TimeSetupResponse!
+}
+
+"""An object with an ID"""
+interface Node {
+  id: ID!
+}
+
+type OpenShift {
+  ShiftActivities: [OpenShiftActivities]
+  break: String
+  channelId: ID
+  color: String
+  createdAt: Time!
+  endTime: Time
+  id: ID!
+  is24Hours: Boolean!
+  isOpen: Boolean
+  isShared: Boolean
+  label: String
+  note: String
+  sharedBy: ID
+  sharedDate: Time
+  shiftGroupId: ID
+  slots: Int
+  startTime: Time
+}
+
+type OpenShiftActivities {
+  channelId: ID
+  code: String
+  color: String
+  createdAt: Time
+  endTime: Time!
+  id: ID!
+  isPaid: Boolean!
+  name: String!
+  openShiftId: ID!
+  shiftGroupId: ID
+  startTime: Time!
+}
+
+input OpenShiftActivitiesInput {
+  channelId: ID!
+  code: String
+  color: ShiftColorEnum!
+  endTime: Time!
+  isPaid: Boolean!
+  name: String!
+  shiftGroupId: ID!
+  startTime: Time!
+}
+
+type OpenShiftAddResponse {
+  errors: [ShiftError!]!
+  openShift: OpenShift
+}
+
+type OpenShiftAssignResponse {
+  assignedShift: AssignedShift
+  errors: [ShiftError!]!
+}
+
+type OpenShiftDeleteResponse {
+  errors: [ShiftError!]!
+  openShift: OpenShift
+}
+
+type OpenShiftEditResponse {
+  errors: [ShiftError!]!
+  openShift: OpenShift
+}
+
+type OpenShiftInfo {
+  numberOfShifts: Int
+  shifts: [OpenShift]
+  title: String
+}
+
+input OpenShiftInput {
+  ShiftActivities: [OpenShiftActivitiesInput]
+  break: UnpaidBreakEnum
+  channelId: ID
+  color: ShiftColorEnum
+  endTime: Time
+  is24Hours: Boolean
+  isOpen: Boolean
+  isShared: Boolean
+  label: String
+  note: String
+  sharedBy: ID
+  sharedDate: Time
+  shiftGroupId: ID
+  slots: Int
+  startTime: Time
+}
+
+input OpenShiftsInput {
+  ShiftActivities: [OpenShiftActivitiesInput]
+  break: UnpaidBreakEnum
+  channelId: ID
+  color: ShiftColorEnum
+  endTime: Time
+  id: ID
+  is24Hours: Boolean
+  isOpen: Boolean
+  isShared: Boolean
+  label: String
+  note: String
+  sharedBy: ID
+  sharedDate: Time
+  shiftGroupId: ID
+  slots: Int
+  startTime: Time
+}
+
+enum OrderDirection {
+  """Specifies an ascending sort order."""
+  ASC
+
+  """Specifies a descending sort order."""
+  DESC
+}
+
+"""
+The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
+"""
+type PageInfo {
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+}
+
+type Query {
+  GetLatestTimeCard(authUserId: ID, channelId: ID!): TimeCardsResponse!
+  GetOpenShareOpenShifts(authUserId: ID, channelId: ID!, endTime: Time!, shiftGroupId: ID!, startTime: Time!): [OpenShift!]!
+  GetShareAssignedShiftsByTime(authUserId: ID, channelId: ID!, endTime: Time!, shiftGroupId: ID!, startTime: Time!, userId: ID!): [AssignedShift!]!
+  GetShareOpenShiftsByTime(authUserId: ID, channelId: ID!, endTime: Time!, shiftGroupId: ID!, startTime: Time!): [OpenShift!]!
+  GetShiftsByShareTask(authUserId: ID, channelId: ID!, endDate: Time!, filter: GetShiftsFilter, startDate: Time!): GetShiftsByTaskResponse
+  channel(id: ID, slug: String): Channel
+  channels: [Channel!]
+  getAllAssignedShiftByChannelID(authUserId: ID, channelId: ID!, endDate: Time!, startDate: Time!): GetAllAssignedShiftByChannelIDResponse
+  getAllRequests(authUserId: ID, channel: String!, first: Int): GetAllRequestsResponse
+  getAllShiftMembers(authUserId: ID, first: Int, last: Int): [User!]!
+  getAllUniqueShifts(authUserId: ID, channelId: ID!, shiftGroupId: ID!): GetAllUniqueShiftsResponse
+  getAssignedShift(authUserId: ID, id: ID!): AssignedShift
+  getAssignedShifts(authUserId: ID): [AssignedShift!]
+  getAssignedShiftsByChannelIdShiftGroupId(authUserId: ID, channelId: ID!, shiftGroupId: ID!): [AssignedShift!]!
+  getAssignedShiftsByChannelIdShiftGroupIdUserId(authUserId: ID, channelId: ID!, shiftGroupId: ID!, userId: ID!): [AssignedShift!]!
+  getAssignedShiftsByTime(authUserId: ID, channelId: ID!, endTime: Time!, shiftGroupId: ID!, startTime: Time!, userId: ID!): [AssignedShift!]!
+  getDayNote(authUserId: ID, id: ID!): DayNoteResponse
+  getDayNotes(authUserId: ID, channel: String!, endTime: Time!, startTime: Time!): [DayNoteResponse]
+  getNonShiftGroupMembers(authUserId: ID, channelId: ID!, shiftGroupId: ID!): GetNonShiftGroupMembersResponse
+  getOpenShift(authUserId: ID, id: ID!): OpenShift
+  getOpenShifts(authUserId: ID, channelId: ID!, shiftGroupId: ID!): [OpenShift!]!
+  getOpenShiftsByTime(authUserId: ID, channelId: ID!, endTime: Time!, shiftGroupId: ID!, startTime: Time!): [OpenShift!]!
+  getRequestOffer(authUserId: ID, id: ID!): RequestOffer
+  getRequestOffers(authUserId: ID): [RequestOffer]!
+  getRequestOffersByChannelIdRequestId(channelId: ID!, requestId: ID!): RequestOffer
+  getRequestSwap(authUserId: ID, id: ID!): RequestSwap!
+  getRequestTimeOff(authUserId: ID, id: ID!): RequestTimeOff!
+  getRequestTimeOffs(authUserId: ID): [RequestTimeOff]!
+  getRequestTimeOffsByChannelIdRequestId(channelId: ID!, requestId: ID!): RequestTimeOff!
+  getRequests(after: String, authUserId: ID, before: String, channel: String!, first: Int, last: Int): GetRequestsResponse
+  getRequestsByUser(authUserId: ID, channelId: ID!, userId: ID!): GetRequestsResponse
+  getRequestsSwaps(authUserId: ID, channelId: ID!): [RequestSwap]!
+  getRequestsSwapsByChannelIdRequestId(channelId: ID!, requestId: ID!): RequestSwap!
+  getSetting(authUserId: ID, id: ID!): Setting
+  getSettings(authUserId: ID, channelId: ID!): [Setting!]!
+  getShiftGroupMembers(authUserId: ID, channel: String!, shiftGroupId: ID!): [User]!
+  getShiftGroupMembersList(authUserId: ID, channelId: ID!, shiftGroupId: ID!): [ShiftGroupMember]!
+  getShiftsByPeople(authUserId: ID, channelId: ID!, endDate: Time!, filter: GetShiftsFilter, shiftGroupId: ID!, startDate: Time!): GetShiftsResponse!
+  getShiftsByTask(authUserId: ID, channelId: ID!, endDate: Time!, filter: GetShiftsFilter, startDate: Time!): GetShiftsByTaskResponse
+  getTimeCard(authUserId: ID, id: ID!): TimeCardsResponse!
+  getTimeCardByChannelIdTimeCardId(channelId: ID!, timeCardId: ID!): TimeCard!
+  getTimeCards(authUserId: ID, channelId: ID!): [TimeCardsResponse]!
+  getTimeOff(authUserId: ID, id: ID!): AssignedShift!
+  getTimeOffShared(authUserId: ID, channelId: ID!, endTime: Time!, shiftGroupId: ID!, startTime: Time!, userId: ID!): [AssignedShift!]!
+  getTimeOffs(authUserId: ID, channelId: ID!, endTime: Time!, shiftGroupId: ID!, startTime: Time!, userId: ID!): [AssignedShift!]!
+  getTimeSetups(authUserId: ID, channelId: ID!): [TimeSetupResponses]!
+  getUserByIsStaff(isStaff: Boolean!): [User]!
+  shiftGroup(authUserId: ID, id: ID!): ShiftGroup
+  shiftGroups(after: String, authUserId: ID, channel: String!, first: Int): [ShiftGroup!]!
+  shiftGroupsByChannel(authUserId: ID, channelId: ID!): [ShiftGroup!]!
+  user(email: String, id: ID): User!
+  users(first: Int, last: Int): [User!]!
+}
+
+type Request {
+  channelId: ID
+  createdAt: Time
+  id: ID!
+  recipientId: ID
+  type: String!
+  userId: ID
+}
+
+type RequestOffer {
+  AssignedShiftId: ID!
+  assignedShiftId: ID!
+  assignedUserShiftId: ID!
+  channelId: ID!
+  createdAt: Time!
+  id: ID!
+  offeredToUserId: ID!
+  requestId: ID!
+  requestNote: String
+  requestStatus: String
+  responseAt: Time
+  responseByUserId: ID
+  responseNote: String
+  status: RequestStatus!
+  userId: ID!
+}
+
+input RequestOfferInput {
+  assignedShiftId: ID!
+  assignedUserShiftId: ID!
+  channelId: ID!
+  offeredToUserId: ID
+  requestNote: String
+  requestStatus: String
+  responseAt: Time
+  responseByUserId: ID
+  responseNote: String
+  userId: ID!
+}
+
+type RequestOfferResponse {
+  errors: [ShiftError!]!
+  request: RequestResponse
+}
+
+type RequestResponse {
+  assignedShiftId: ID!
+  assignedUserShiftId: ID!
+  channelId: ID!
+  createdAt: String
+  endTime: Time
+  id: ID!
+  isAllDay: Boolean
+  reason: String
+  requestId: ID!
+  requestNote: String
+  requestStatus: String
+  responseAt: String
+  responseBy: User
+  responseNote: String
+  shiftOfferedTo: User
+  shiftToOffer: AssignedShiftResult
+  shiftToSwap: AssignedShiftResult
+  startTime: Time
+  status: RequestStatus
+  toSwapWith: AssignedShiftResult
+  type: RequestType
+  user: User!
+}
+
+enum RequestStatus {
+  APPROVED
+  CANCELLED
+  DENIED
+  PENDING
+}
+
+type RequestSwap {
+  assignedShiftID: ID
+  assignedShiftIDToSwap: ID
+  assignedShiftId: ID
+  assignedShiftIdToSwap: ID
+  assignedUserShiftId: ID
+  assignedUserShiftIdToSwap: ID
+  channelId: ID!
+  createdAt: Time!
+  id: ID!
+  requestId: ID
+  requestNote: String
+  responseAt: Time
+  responseByUserId: ID
+  responseNote: String
+  status: RequestStatus!
+  userId: ID!
+}
+
+input RequestSwapInput {
+  assignedShiftId: ID
+  assignedShiftIdToSwap: ID
+  assignedUserShiftId: ID!
+  assignedUserShiftIdToSwap: ID
+  channelId: ID!
+  requestNote: String
+  responseAt: Time
+  responseByUserId: ID
+  responseNote: String
+  userId: ID!
+}
+
+type RequestSwapResponse {
+  errors: [ShiftError!]!
+  request: RequestResponse
+}
+
+type RequestTimeOff {
+  channelId: ID
+  createdAt: Time!
+  endTime: Time
+  id: ID!
+  is24Hours: Boolean
+  reason: String
+  requestId: ID
+  requestNote: String
+  responseAt: Time
+  responseByUserId: ID
+  responseNote: String
+  startTime: Time!
+  status: RequestStatus!
+  userId: ID!
+}
+
+input RequestTimeOffInput {
+  channelId: ID!
+  endTime: Time
+  is24Hours: Boolean!
+  reason: String
+  requestNote: String
+  responseAt: Time
+  responseByUserId: ID
+  responseNote: String
+  startTime: Time!
+  userId: ID!
+}
+
+enum RequestType {
+  OFFER
+  SWAP
+  TIMEOFF
+}
+
+input RequestsInput {
+  channelId: ID
+  recipientId: ID
+  type: String
+  userId: ID
+}
+
+type ResponseStatus {
+  message: String
+  status: String
+}
+
+type Setting {
+  channelId: ID
+  createdAt: Time!
+  id: ID!
+  isAllowOpen: Boolean!
+  isCopyActivity: Boolean!
+  startOfWeek: String
+  timeOffReason: [TimeOffReason]
+  userId: ID
+}
+
+type SettingAddResponse {
+  errors: [ShiftError!]!
+  setting: Setting
+}
+
+type SettingEditResponse {
+  errors: [ShiftError!]!
+  setting: Setting
+}
+
+input SettingInput {
+  channelId: ID
+  isAllowOpen: Boolean!
+  isCopyActivity: Boolean!
+  startOfWeek: String
+  timeOffReason: [TimeOffReasonInput]
+  userId: ID
+}
+
+enum ShiftColorEnum {
+  BLUE
+  CYAN
+  DARKBLUE
+  DARKCYAN
+  DARKGREEN
+  DARKLAVENDER
+  DARKMAGENTA
+  DARKORANGE
+  GRAY
+  GREEN
+  LAVENDER
+  MAGENTA
+  ORANGE
+  PINK
+  PURPLE
+  RED
+  WHITE
+  YELLOW
+}
+
+type ShiftError {
+  code: ShiftErrorCode!
+  field: String
+  message: String
+  value: String
+}
+
+enum ShiftErrorCode {
+  GRAPHQL_ERROR
+  INVALID
+  NOT_FOUND
+  REQUIRED
+}
+
+type ShiftGroup {
+  channelId: ID!
+  createdAt: Time
+  id: ID!
+  name: String!
+  position: Int
+}
+
+input ShiftGroupInput {
+  channelId: ID!
+  name: String!
+  position: Int
+}
+
+type ShiftGroupMember {
+  channelId: ID!
+  createdAt: Time!
+  id: ID!
+  position: Int
+  shiftGroupId: ID!
+  userId: ID!
+}
+
+type ShiftGroupMemberAddResponse {
+  errors: [ShiftError!]!
+  user: User
+}
+
+input ShiftGroupMemberInput {
+  channelId: ID!
+  shiftGroupId: ID!
+  userId: ID!
+}
+
+type ShiftGroupMemberRemoveResponse {
+  errors: [ShiftError!]!
+  user: User
+}
+
+type ShiftGroups {
+  groupId: ID!
+  groupName: String!
+  position: Int
+  shifts: Shifts
+}
+
+type Shifts {
+  assignedShifts: [UserAssignedShifts]!
+  openShifts: OpenShiftInfo!
+}
+
+type ShippingMethod {
+  id: ID!
+  name: String!
+}
+
+input ShippingMethodInput {
+  id: ID!
+  name: String!
+}
+
+type ShippingMethodsPerCountry {
+  country: String!
+  shippingMethods: [ShippingMethod]
+}
+
+input ShippingMethodsPerCountryInput {
+  country: String!
+  shippingMethods: [ShippingMethodInput]
+}
+
+enum StaffMemberStatus {
+  """User account has been activated."""
+  ACTIVE
+
+  """User account has not been activated yet."""
+  DEACTIVATED
+}
+
+type StockSettings {
+  trackInventory: Boolean!
+}
+
+input StockSettingsInput {
+  trackInventory: Boolean!
+}
+
+scalar Time
+
+type TimeCard {
+  channelId: ID
+  clockInEvent: ID
+  clockOutEvent: ID
+  confirmedBy: ID
+  createdBy: ID
+  createdDateTime: Time
+  endBreaks: ID
+  id: ID!
+  lastModifiedBy: ID
+  lastModifiedDateTime: Time
+  notes: String
+  originalEntry: ID
+  startBreaks: ID
+  status: TimeCardStatus
+}
+
+type TimeCardEvent {
+  CreatedAt: Time
+  dateTime: Time
+  id: ID!
+  note: String
+  status: TimeCardStatus
+  timeCardId: ID!
+}
+
+input TimeCardEventInput {
+  createdAt: Time
+  dateTime: Time
+  id: ID
+  note: String
+  timeCardId: ID
+}
+
+input TimeCardInput {
+  channelId: ID
+  clockInEvent: TimeCardEventInput
+  clockOutEvent: TimeCardEventInput
+  confirmedBy: ID
+  createdBy: ID
+  createdDateTime: Time
+  endBreaks: TimeCardEventInput
+  lastModifiedBy: ID
+  lastModifiedDateTime: Time
+  notes: String
+  startBreaks: TimeCardEventInput
+}
+
+type TimeCardResponse {
+  errors: [ShiftError!]!
+  timeCard: TimeCard
+}
+
+enum TimeCardStatus {
+  APPROVED
+  BREAK_ON
+  BREAK_OUT
+  CANCELLED
+  CLOCKED_IN
+  CLOCKED_OUT
+  DENIED
+}
+
+type TimeCardsResponse {
+  channelId: ID
+  clockInEvent: TimeCardEvent
+  clockOutEvent: TimeCardEvent
+  confirmedBy: ID
+  createdBy: ID
+  createdDateTime: Time
+  endBreaks: TimeCardEvent
+  id: ID!
+  lastModifiedBy: ID
+  lastModifiedDateTime: Time
+  notes: String
+  originalEntry: ID
+  startBreaks: TimeCardEvent
+  status: TimeCardStatus
+  user: User!
+}
+
+type TimeOff {
+  channelId: ID
+  color: ShiftColorEnum
+  createdAt: Time
+  endTime: Time!
+  id: ID!
+  is24Hours: Boolean
+  isOpen: Boolean
+  isShared: Boolean
+  label: String
+  note: String
+  sharedBy: ID
+  sharedDate: Time
+  shiftGroupId: ID
+  startTime: Time!
+  userId: ID
+}
+
+type TimeOffAddResponse {
+  errors: [ShiftError!]!
+  timeoff: AssignedShift
+}
+
+type TimeOffDeleteResponse {
+  errors: [ShiftError!]!
+  timeoff: AssignedShift
+}
+
+type TimeOffEditResponse {
+  errors: [ShiftError!]!
+  timeoff: AssignedShift
+}
+
+input TimeOffInput {
+  channelId: ID
+  color: ShiftColorEnum
+  endTime: Time!
+  id: ID
+  is24Hours: Boolean
+  isOpen: Boolean
+  isShared: Boolean
+  label: String
+  note: String
+  sharedBy: ID
+  sharedDate: Time
+  shiftGroupId: ID
+  startTime: Time!
+  userId: ID
+}
+
+type TimeOffReason {
+  createdAt: Time
+  id: ID!
+  key: String!
+  settingId: ID!
+  value: String
+}
+
+input TimeOffReasonInput {
+  key: String!
+  value: String
+}
+
+type TimeOffResponse {
+  errors: [ShiftError!]!
+  request: RequestResponse
+}
+
+type TimeSetup {
+  channelId: ID
+  createdBy: ID
+  createdDateTime: Time
+  id: ID!
+  isTimeSetup: Boolean
+  lastModifiedBy: ID
+  lastModifiedDateTime: Time
+  location: String
+}
+
+input TimeSetupInput {
+  channelId: ID
+  createdBy: ID
+  createdDateTime: Time
+  isTimeSetup: Boolean
+  lastModifiedBy: ID
+  lastModifiedDateTime: Time
+  location: String
+}
+
+type TimeSetupResponse {
+  errors: [ShiftError!]!
+  timeSetup: TimeSetup
+}
+
+type TimeSetupResponses {
+  channelId: ID
+  createdBy: ID
+  createdDateTime: Time
+  id: ID!
+  isTimeSetup: Boolean
+  lastModifiedBy: ID
+  lastModifiedDateTime: Time
+  location: String
+}
+
+type UniqueShifts {
+  assignedShifts: [AssignedShift]
+  openShifts: [OpenShift]
+}
+
+enum UnpaidBreakEnum {
+  MIN_0
+  MIN_15
+  MIN_30
+  MIN_45
+  MIN_60
+  MIN_75
+  MIN_90
+}
+
+type User implements Node {
+  avatar: String
+  dateJoined: Time!
+  email: String!
+  firstName: String!
+  id: ID!
+  isActive: Boolean!
+  isStaff: Boolean!
+  languageCode: String!
+  lastLogin: Time
+  lastName: String!
+  metadata: Map
+  note: String
+  phone: String
+  privateMetadata: Map
+  updatedAt: Time
+  whatsapp: String
+}
+
+type UserAssignedShifts {
+  image: String
+  name: String!
+  numberOfHours: Int!
+  shifts: [AssignedShift]
+  userId: ID!
+}
+
+type UserCountableEdge {
+  """A cursor for use in pagination."""
+  cursor: String!
+
+  """The item at the end of the edge."""
+  node: User!
+}
+
+enum UserSortField {
+  """Sort users by created at."""
+  CREATED_AT
+
+  """Sort users by email."""
+  EMAIL
+
+  """Sort users by first name."""
+  FIRST_NAME
+
+  """Sort users by last modified at."""
+  LAST_MODIFIED_AT
+
+  """Sort users by last name."""
+  LAST_NAME
+
+  """Sort users by order count."""
+  ORDER_COUNT
+}
+
+type Warehouse {
+  id: ID!
+  name: String!
+}
+
+input WarehouseInput {
+  id: ID!
+  name: String!
+}
+
+type settingDeleteResponse {
+  errors: [ShiftError!]!
+  setting: Setting
+}
